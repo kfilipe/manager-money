@@ -1,10 +1,10 @@
 .container {
-    width: 1200px;
+    width: 100%;
     display: flex;
     justify-content: space-between;
     margin: 0 auto;
     flex-wrap: wrap; /*Joga pra baixo quando passar do max width*/
-    padding-left: 50px;
+    padding-left: 30px;
 }
 
 .min-height {
