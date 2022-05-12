@@ -9,7 +9,7 @@ function Home() {
                 Bem vindo ao <span>Manager Money</span>
             </h1>
             <p>Gerencie os seus projetos agora!</p>
-            <LinkButton to='/myproject' text='Criar Projeto' />
+            <LinkButton to='/myprojects' text='Criar Projeto' />
             <img src={savings} alt="MM"></img>
         </section>
 
