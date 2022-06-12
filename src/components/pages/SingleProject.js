@@ -8,6 +8,7 @@ import ServiceForm from '../service/ServiceForm'
 import styles from './SingleProject.module.css'
 
 import { parse, v4 as uuidv4 } from 'uuid'
+import ServiceCard from '../service/ServiceCard'
 
 
 function SingleProject() {
@@ -32,6 +33,7 @@ function SingleProject() {
                 .then(res => res.json())
                 .then((data) => {
                     setProject(data)
+                    setServices(data.services)
                 })
                 .catch(err => console.log(err))
         }, 300);
@@ -43,6 +45,35 @@ function SingleProject() {
 
     function toggleServiceForm() {
         setShowServiceForm(!showServiceForm)
+    }
+
+    function removeService(id, cost) {
+
+        const serviceUpdated = project.services.filter(
+            (service) => service.id !== id
+        )
+
+        const projectUpdated = project
+
+        projectUpdated.services = serviceUpdated
+        projectUpdated.cost = parseFloat(projectUpdated.cost) - parseFloat(cost)
+
+        fetch(`http://localhost:5000/projects/${projectUpdated.id}`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(projectUpdated)
+        })
+            .then((res) => res.json())
+            .then((data) => {
+                setProject(projectUpdated)
+                setServices(serviceUpdated)
+                setMessage('Serviço removido com sucesso')
+                setType('sucess')
+            })
+            .catch(err => console.log(err))
+
     }
 
     function createService(project) {
@@ -77,6 +108,7 @@ function SingleProject() {
             .then((data) => {
                 console.log(data)
                 //servicos
+                setShowServiceForm(false)
             })
             .catch((err) => console.log(err))
     }
@@ -100,7 +132,6 @@ function SingleProject() {
         })
             .then(res => res.json())
             .then((data) => {
-
                 setProject(data)
                 setShowProjectForm(false)
                 setMessage('Projeto Atualizado!')
@@ -160,7 +191,19 @@ function SingleProject() {
                         </div>
                         <h2>Serviços</h2>
                         <Container customClass="start">
-                            <p>Itens de serviços</p>
+                            {services.length > 0 &&
+                                services.map((service) => (
+                                    <ServiceCard
+                                        id={service.id}
+                                        name={service.name}
+                                        cost={service.cost}
+                                        description={service.description}
+                                        key={service.id}
+                                        handleRemove={removeService}
+                                    />
+                                ))
+                            }
+                            {services.length === 0 && <p>Não há serviços cadastrados</p>}
                         </Container>
                     </Container>
                 </div >
