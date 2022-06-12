@@ -1,26 +1,40 @@
 {
   "projects": [
     {
-      "name": "Sesc Verão",
-      "budget": "50000",
-      "category": {
-        "id": "2",
-        "name": "Desenvolvimento"
-      },
-      "cost": 0,
-      "services": [],
-      "id": 3
-    },
-    {
       "name": "Festa Junina",
       "budget": "500",
       "category": {
         "id": "4",
         "name": "Planejamento"
       },
-      "cost": 0,
-      "services": [],
+      "cost": 100,
+      "services": [
+        {
+          "name": "Filipe",
+          "cost": "100",
+          "description": "teste",
+          "id": "a8f10835-c3ca-46fc-ada4-32ee603a7d1e"
+        }
+      ],
       "id": 4
+    },
+    {
+      "name": "Baixada em Foco",
+      "budget": "25000",
+      "category": {
+        "id": "2",
+        "name": "Desenvolvimento"
+      },
+      "cost": 1500,
+      "services": [
+        {
+          "name": "Palco",
+          "cost": "1500",
+          "description": "Apresentação",
+          "id": "33c24699-0ef4-48e6-92e4-9b7ebdcfe866"
+        }
+      ],
+      "id": 5
     }
   ],
   "categories": [

@@ -4,8 +4,10 @@ import Container from '../layout/Container'
 import Loading from '../layout/Loading/Loading'
 import Message from '../layout/Message'
 import ProjectForm from '../project/ProjectForm'
+import ServiceForm from '../service/ServiceForm'
 import styles from './SingleProject.module.css'
 
+import { parse, v4 as uuidv4 } from 'uuid'
 
 
 function SingleProject() {
@@ -15,6 +17,7 @@ function SingleProject() {
     const [project, setProject] = useState([])
     const [showProjectForm, setShowProjectForm] = useState(false)
     const [showServiceForm, setShowServiceForm] = useState(false)
+    const [services, setServices] = useState([])
     const [message, setMessage] = useState()
     const [type, setType] = useState()
 
@@ -41,6 +44,43 @@ function SingleProject() {
     function toggleServiceForm() {
         setShowServiceForm(!showServiceForm)
     }
+
+    function createService(project) {
+
+        //ultimo serviço para validação de saldo
+        console.log(project.services)
+        const lastService = project.services[project.services.length - 1]
+
+        lastService.id = uuidv4()
+
+        const lastServiceCost = lastService.cost
+
+        const newCost = parseFloat(project.cost) + parseFloat(lastServiceCost)
+
+        if (newCost > parseFloat(project.budget)) {
+            setMessage('Orçamento ultrapassado, verifique o valor do serviço')
+            setType('error')
+            project.services.pop()
+            return false
+        }
+
+        project.cost = newCost
+
+        fetch(`http://localhost:5000/projects/${project.id}`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(project)
+        })
+            .then((res) => res.json())
+            .then((data) => {
+                console.log(data)
+                //servicos
+            })
+            .catch((err) => console.log(err))
+    }
+
 
     function editPost(project) {
         setMessage('')
@@ -109,7 +149,13 @@ function SingleProject() {
                                 {!showServiceForm ? 'Adicionar serviço' : 'Fechar'}
                             </button>
                             <div className={styles.form}>
-                                {showServiceForm && <div>Form service</div>}
+                                {showServiceForm && (
+                                    <ServiceForm
+                                        handleSubmit={createService}
+                                        btnText="Adicionar Serviço"
+                                        projectData={project}
+                                    />
+                                )}
                             </div>
                         </div>
                         <h2>Serviços</h2>
